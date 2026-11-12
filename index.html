@@ -30,7 +30,7 @@ input,select{width:100%;padding:12px;border:1px solid var(--line);border-radius:
 <p class="mut">Photos you add here show on the shop page straight away. <a href="ManiacPrints-20.html">Open shop</a></p>
 <div id="loginBox" class="note" style="max-width:420px"><b>Admin login</b>
   <label>Email</label><input id="le" type="email" autocomplete="email"><label>Password</label><input id="lp" type="password" autocomplete="current-password">
-  <div style="height:12px"></div><button class="btn" id="lg">Sign in</button></div>
+  <div style="height:12px"></div><button class="btn" id="lg">Sign in</button> <button class="btn" id="lgg" style="background:transparent;color:var(--fg);border:1px solid var(--fg)">Continue with Google</button></div>
 <p><button class="btn" id="lo" hidden>Sign out</button></p>
 <div id="app" hidden>
 <div class="grid">
@@ -120,6 +120,7 @@ function startSubs(){
   SUBS.push(db.collection('products').orderBy('ts','desc').onSnapshot(function(s){L=s.docs.map(function(q){var x=q.data();x.id=q.id;return x});render()},function(e){say('Could not load: '+e.message)}));
 }
 $('lg').onclick=function(){say('Signing in…');AUTH.signInWithEmailAndPassword($('le').value.trim(),$('lp').value).catch(function(e){say('Sign in failed: '+(e.code||e.message))})};
+$('lgg').onclick=function(){say('Opening Google…');AUTH.signInWithPopup(new firebase.auth.GoogleAuthProvider()).catch(function(e){say(e.code==='auth/unauthorized-domain'?'This website address is not allowed yet. In Firebase > Authentication > Settings > Authorized domains, add: '+location.hostname:'Google sign in failed: '+(e.code||e.message))})};
 $('lo').onclick=function(){AUTH.signOut()};
 AUTH.onAuthStateChanged(function(u){
   stopSubs();db=null;O=[];L=[];$('app').hidden=true;$('lo').hidden=!u;$('loginBox').hidden=!!u;
